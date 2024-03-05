@@ -1,25 +1,10 @@
-#!python
-#starting over
-"""
-title: tictactoe
-description: main()
-author: @a
-notes:
-what i want from this is a tic-tac-toe environment where a bot can essentially play the game by itself and explore different ml frameworks
-
-"""
-
-import random
-
-#establish the board
 def initialize_board():
-	return [[" " for _ in range(3)] for _ in range(3)]
+    return [[" " for _ in range(3)] for _ in range(3)]
 
-#actually print it out
 def print_board(board):
-	for row in board:
-		print("|".join(row))
-		print("-" * 5)
+    for row in board:
+        print("|".join(row))
+        print("-" * 5)
 
 def make_move(board, row, col, player):
     if board[row][col] == " ":
@@ -27,20 +12,18 @@ def make_move(board, row, col, player):
         return True
     return False
 
-#check for a win
 def check_win(board, player):
-	for i in range(3):
-		if all(board[i][j] == player for j in range(3)) or \
-			all(board[i][j] == player for j in range(3)):
-				return True
-	if all(board[i][i] == player for i in range(3)) or \
-		all(board[i][2-i] == player for i in range(3)):
-			return True
-	return False
+    for i in range(3):
+        if all(board[i][j] == player for j in range(3)) or \
+           all(board[j][i] == player for j in range(3)):
+            return True
+    if all(board[i][i] == player for i in range(3)) or \
+       all(board[i][2-i] == player for i in range(3)):
+        return True
+    return False
 
-#check for a tie
 def check_tie(board):
-	return all(board[i][j] != " "for i in range(3) for j in range(3))
+    return all(board[i][j] != " " for i in range(3) for j in range(3))
 
 def minimax(board, depth, is_maximizing):
     if check_win(board, "X"):
@@ -81,13 +64,9 @@ def ai_move(board, player):
     _, move = minimax(board, 0, True)
     return move
 
-#the game loop
 def main():
-    # Establish the actual board
     board = initialize_board()
-    # Starting with bot1
     current_player = "X"
-    # The game hasn't finished, so by default it'll run until it is complete
     game_over = False
 
     while not game_over:
@@ -114,3 +93,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
