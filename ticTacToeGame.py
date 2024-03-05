@@ -92,5 +92,104 @@ def main():
 
         play_again = input("Do you want to play again? (y/n): ")
 
+#implement an evaluation function basing it off the minimax function
+def evaluate(board):
+    #check for ai win
+    if check_win(board, "O"): #assuming ai uses o
+        return 1
+    #check for human win
+    elif check_win(board, "Human"): #assuming player uses x
+        return -1
+    #no win
+    else:
+        return 0
+
+#implement the minimax function
+def minimax(board, depth, isMaximizingPlayer):
+    score = evaluate(board)
+
+    if score == 1:
+        return score
+    if score == -1:
+        return score
+    if check_tie(board):
+        return 0
+
+    if isMaximizingPlayer:
+        bestScore = -float('inf')
+        for row in range(3):
+            for col in range(3):
+                #is the spot available?
+                if board[row][col] == " ":
+                    board[row][col] = "O" #ai makes its move
+                    score = minimax(board, depth + 1, False)
+                    board[row][col] = " " #undo the move
+                    bestScore = max(score, bestScore)
+        return bestScore
+    else:
+        bestScore = float('inf')
+        for row in range(3):
+            for col in range(3):
+                if board[row][col] == " ":
+                    board[row][col] = "X" #human's move is simulated here
+                    score = minimax(board, depth + 1, True)
+                    board[row][col] = " " #undo the move
+                    bestScore = min(score, bestScore)
+        return bestScore
+
+#find the best move for ai
+def find_best_move(board):
+    bestScore = -float('inf')
+    move = (-1, -1)
+    for row in range(3):
+        for col in range(3):
+            if board[row][col] == " ":
+                board[row][col] = "O" #assuming ai is "O"
+                score = minimax(board, O, False)
+                board[row][col] = " " #undo the move
+                if score > bestScore:
+                    bestScore = score
+                    move = (row, col)
+    
+    return move
+
+current_player = "X" #assume human starts
+game_over = False # initialize the game_over variable
+
+while not game_over:
+    print_board(board)
+    if current_player == "X":
+        player_move(board, current_player) #human's turn
+    else:
+        row, col = find_best_move(board) #ai's turn
+        board[row][col] = "O"
+        print(f"AI placed an 'O' in position {row}, {col}")
+
+    #check for a win
+    if check_win(board, current_player):
+        game_over = True
+        print_board(board) #display the final board state
+        print(f"{current_player} wins the game!")
+
+    #check for a tie
+    elif check_time(board):
+        game_over = True
+        print_board(board) #display the final board state
+        print("The game is a tie!")
+
+    #switch players
+    current_player = "O" if current_player == "X" else "X"
+
+#after the loop, ask if one wants to play again
+replay = input("Game over. Do you want to play again? (yes/no): ").lower()
+if replay in ["yes", "y"]:
+    #reset the game to its initial state
+    board = initialize_board() #makes ure this function is defined to reset the game
+    current_player = "X"
+    game_over = False
+else:
+    print("Thank you for playing!")
+
+
 if __name__ == "__main__":
     main()
