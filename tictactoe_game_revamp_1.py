@@ -25,7 +25,7 @@ def check_win(board, player):
 def check_tie(board):
     return all(board[i][j] != " " for i in range(3) for j in range(3))
 
-def minimax(board, depth, is_maximizing):
+def minimax(board, depth, is_maximizing, alpha, beta): 
     if check_win(board, "X"):
         return -10 + depth, None
     elif check_win(board, "O"):
@@ -40,11 +40,14 @@ def minimax(board, depth, is_maximizing):
             for j in range(3):
                 if board[i][j] == " ":
                     board[i][j] = "O"
-                    score, _ = minimax(board, depth + 1, False)
+                    score, _ = minimax(board, depth + 1, False, alpha, beta) #integrating alpha and beta
                     board[i][j] = " "
                     if score > best_score:
                         best_score = score
                         best_move = (i, j)
+                    alpha = max(alpha, score)
+                    if beta <= alpha:
+                        break #pruning happens here
         return best_score, best_move
     else:
         best_score = float("inf")
@@ -53,11 +56,14 @@ def minimax(board, depth, is_maximizing):
             for j in range(3):
                 if board[i][j] == " ":
                     board[i][j] = "X"
-                    score, _ = minimax(board, depth + 1, True)
+                    score, _ = minimax(board, depth + 1, True, alpha, beta)
                     board[i][j] = " "
                     if score < best_score:
                         best_score = score
                         best_move = (i, j)
+                    beta = min(beta, score)
+                    if beta <= alpha:
+                        break #pruning ""
         return best_score, best_move
 
 def ai_move(board, player):
