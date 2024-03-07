@@ -117,7 +117,7 @@ def ai_move(board, player):
     return best_move
 
 #re-configure this to make it so that it simulates the num_games at once rather than per instance
-def simulate_games(): #augmenting this so that i don't have to see the game itself even if the components were created earlier
+def simulate_games(num_games): #augmenting this so that i don't have to see the game itself even if the components were created earlier
     #num_games = 1000
     player_x_total_wins = 0 #baseline
     player_o_total_wins = 0 #""
@@ -170,23 +170,34 @@ def simulate_games(): #augmenting this so that i don't have to see the game itse
 #loop everything through here
 def main():
     num_games = 1000 #number of games to simulate
-    player_x_total_wins = 0
-    player_o_total_wins = 0
-    total_ties = 0
+    #player_x_total_wins = 0
+    #player_o_total_wins = 0
+    #total_ties = 0
 
     #simulate multiple games
-    for _ in range(num_games):
-        player_x_wins, player_o_wins, ties = simulate_games(1)
-        player_x_total_wins += player_x_wins
-        player_o_total_wins += player_o_wins
-        total_ties += ties
+    player_x_total_wins, player_o_total_wins, total_ties = simulate_games(num_games)
+
+    #for _ in range(num_games):
+        #player_x_wins, player_o_wins, ties = simulate_games(1)
+        #player_x_total_wins += player_x_wins
+        #player_o_total_wins += player_o_wins
+        #total_ties += ties
+
+    #calculate win-percentage for player X
+    total_games = num_games - total_ties
+    player_x_win_percentage = (player_x_total_wins / total_games) * 100
+    
+    #calculate win_percentage for player O 
+    total_games1 = num_games - total_ties
+    player_o_win_percentage = (player_o_total_wins / total_games) * 100
 
     #display sumary
     print("Summary:")
     print(f"Player X wins: {player_x_total_wins}")
     print(f"Player O wins: {player_o_total_wins}")
-    print(f"Ties: {ties}")
-
+    print(f"Ties: {total_ties}")
+    print(f"Player X win-percentage - ties: {player_x_win_percentage:.2f}%")
+    print(f"Player O win-percentage - ties: {player_o_win_percentage:.2f}%")
 
 if __name__ == "__main__":
     main()
